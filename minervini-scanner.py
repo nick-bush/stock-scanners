@@ -33,9 +33,9 @@ index_df = pdr.get_data_yahoo(index_name,start_date,end_date)
 index_df['Percent Change'] = index_df['Adj Close'].pct_change()
 index_return = (index_df['Percent Change'] + 1).cumprod()[-1]
 
-#top 30% of stocks relative to index
+
 for ticker in tickers:
-    #get data for each ticker
+    #get data for ticker
     df = pdr.get_data_yahoo(ticker,start_date,end_date)
     df.to_csv(f'{ticker}.csv')
     
@@ -48,9 +48,21 @@ for ticker in tickers:
     #prevents errors due to spamming yahoo
     time.sleep(1)
     
-    rs_df = pd.DataFrame(list(zip(tickers, returns_multiples)), columns = ['Ticker','Returns_multiple'])
-    rs_df['RS_Rating'] = rs_df.Returns_multiple.rank(pct=True)*100
-    rs_df=rs_df[rs_df.RS_Rating >= rs_df.RS_Rating.quantile(.7)]
+#data frame of top 30%
+rs_df = pd.DataFrame(list(zip(tickers, returns_multiples)), columns = ['Ticker','Returns_multiple'])
+rs_df['RS_Rating'] = rs_df.Returns_multiple.rank(pct=True)*100
+rs_df=rs_df[rs_df.RS_Rating >= rs_df.RS_Rating.quantile(.7)]
+
+rs_stocks=rs_df['Ticker']
+
+hourly_data = yf.download(tickers, period="5d", interval='60m')
+
+# Print the data
+print(hourly_data.tail())
+
+
+
+
     
     
     
