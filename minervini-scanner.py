@@ -3,7 +3,7 @@
 """
 Created on Fri Mar  5 15:01:20 2021
 
-@author: neo
+@author: nick
 """
 
 from pandas_datareader import data as pdr
